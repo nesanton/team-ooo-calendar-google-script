@@ -1,11 +1,3 @@
-/* The original code is licenced under Arache License, Version 2.0
-and can be found here:
-https://developers.google.com/apps-script/samples/automations/vacation-calendar
-
-The changes made in this code are also licenced with Apache v2.0.
-Please retain all attribution in comments and files upon redistribution
-*/
-
 // To learn how to use this script, refer to the documentation:
 // https://developers.google.com/apps-script/samples/automations/vacation-calendar
 
@@ -27,13 +19,13 @@ limitations under the License.
 
 // Set the ID of the team calendar to add events to. You can find the calendar's
 // ID on the settings page.
-let TEAM_CALENDAR_ID = 'ENTER_TEAM_CALENDAR_ID_HERE';
+let TEAM_CALENDAR_ID = '<calendar_id>@group.calendar.google.com';
 // Set the email address of the Google Group that contains everyone in the team.
 // Ensure the group has less than 500 members to avoid timeouts.
-let GROUP_EMAIL = 'ENTER_GOOGLE_GROUP_EMAIL_HERE';
+let GROUP_EMAIL = '<group_name>@example.org';
 
-let KEYWORDS = ['vacation', 'ooo', 'out of office', 'offline'];
-let MONTHS_IN_ADVANCE = 3;
+let KEYWORDS = ['vacation', 'ooo', 'out of office', 'offline', 'holiday', 'holidays', 'pto', 'leave'];
+let MONTHS_IN_ADVANCE = 6;
 
 /**
  * Sets up the script to run automatically every hour.
@@ -47,6 +39,27 @@ function setup() {
   // Runs the first sync immediately.
   sync();
 }
+
+/**
+ * Get user's name, from contacts.
+ * Best effort for getting a nice name. The app will access
+ * the contacts of the person who runs it.
+ *
+ * @returns {String} FullName, none.
+ */
+function getNiceName(user){
+  var email = user.getEmail();
+  var contact = ContactsApp.getContact(email);
+  let name = ''
+
+  // If user has themselves in their contacts, return their name
+  if (contact) {
+    // Prefer full name, if that's available
+    name = contact.getFullName();
+  }
+  return name;
+}
+
 
 /**
  * Looks through the group members' public calendars and adds any
@@ -70,7 +83,10 @@ function sync() {
   // calendar.
   let count = 0;
   users.forEach(function(user) {
-    let username = user.getEmail().split('@')[0];
+    let username = getNiceName(user);
+    if (username == '') {
+      username = user.getEmail().split('@')[0];
+    }
     KEYWORDS.forEach(function(keyword) {
       let events = findEvents(user, keyword, today, maxDate, lastRun);
       events.forEach(function(event) {
