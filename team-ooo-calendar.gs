@@ -108,17 +108,38 @@ function sync() {
 }
 
 /**
+ * Converts a given event to an all-day event.
+ * @param {Calendar.Event} event The event to to be converted.
+ */
+function convertToAllDayEvent(event) {
+  if (event.start.dateTime && event.end.dateTime) {
+    var tZone=Session.getTimeZone();
+    let startTime = new Date(event.start.dateTime);
+    let endTime = new Date(event.end.dateTime);
+    delete event.start.dateTime;
+    delete event.end.dateTime;
+    event.start.date = Utilities.formatDate(startTime, tZone, "yyyy-MM-dd");
+    event.end.date = Utilities.formatDate(endTime, tZone, "yyyy-MM-dd");
+    event.summary = event.summary + " (" + Utilities.formatDate(startTime, tZone, "HH:mm") + " - " + 
+                    Utilities.formatDate(endTime, tZone, "HH:mm") + ")" ;
+  }
+}
+
+/**
  * Imports the given event from the user's calendar into the shared team
  * calendar.
  * @param {string} username The team member that is attending the event.
  * @param {Calendar.Event} event The event to import.
  */
 function importEvent(username, event) {
-  event.summary = '[' + username + '] ' + event.summary;
+  if (!event.start.date) {
+    convertToAllDayEvent(event);
+  }  event.summary = '[' + username + '] ' + event.summary;
   event.organizer = {
     id: TEAM_CALENDAR_ID,
   };
   event.attendees = [];
+  event.transparency = 'transparent';
   console.log('Importing: %s', event.summary);
   try {
     Calendar.Events.import(event, TEAM_CALENDAR_ID);
