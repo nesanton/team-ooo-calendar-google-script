@@ -129,6 +129,35 @@ function importEvent(username, event) {
 }
 
 /**
+ * this function can be used to convert all events in an existing ooo calendar to all-day events.
+ */
+function convertAllExistingEventsToAllDayEvents() {
+  let params = {
+    timeMin: formatDateAsRFC3339(new Date())
+  };
+  let pageToken = null;
+  let events = [];
+  do {
+    params.pageToken = pageToken;
+    let response;
+    response = Calendar.Events.list(TEAM_CALENDAR_ID, params);
+    events = events.concat(response.items);
+    pageToken = response.nextPageToken;
+  } while (pageToken);
+
+  events.forEach(function(event) {
+    if (event.start.dateTime && event.end.dateTime) {
+      convertToAllDayEvent(event);
+      try {
+        Calendar.Events.update(event, TEAM_CALENDAR_ID, event.id);
+      } catch  (e) {
+        console.error('Error attempting to update event: %s. Skipping.', e.toString());
+      }
+    }
+  });
+}
+
+/**
  * In a given user's calendar, looks for occurrences of the given keyword
  * in events within the specified date range and returns any such events
  * found.
