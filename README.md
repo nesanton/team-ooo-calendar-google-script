@@ -21,7 +21,7 @@ You can go ahead and follow the linked [1] vanilla example from Google or keep r
 ### Verbose names
 
 Google's example [1], creates records in the form "[username] - Original event name". The `username` may be not too verbose, especially for large teams.
-This code added a best effort function to get users' Full Names. It's a best effort because Groups App and Calendar App do not provide access to User's Full Name (We may be wrong). So We look up the name in the Contacts App. Make sure that the user who runs the script has the whole team in their Contacts. I think mangers are the best candidates. If you are on Google Workspace (formerly G Suite), it's very likely that the entire corporate directory is in everyone's contacts already.
+This code added a best effort function to get users' Full Names. It's a best effort because Groups App and Calendar App do not provide access to User's Full Name (We may be wrong). So We look up the name in the Contacts App. Make sure that the user who runs the script has the whole team in their Contacts. Perhaps mangers are the best candidates. If you are on Google Workspace (formerly G Suite), it's very likely that the entire corporate directory is in everyone's contacts already.
 
 ### More Keywords
 
