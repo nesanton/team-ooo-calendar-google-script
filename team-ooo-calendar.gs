@@ -1,3 +1,10 @@
+/* The original code is licenced under Arache License, Version 2.0
+and can be found here:
+https://developers.google.com/apps-script/samples/automations/vacation-calendar
+The changes made in this code are also licenced with Apache v2.0.
+Please retain all attribution in comments and files upon redistribution
+*/
+
 // To learn how to use this script, refer to the documentation:
 // https://developers.google.com/apps-script/samples/automations/vacation-calendar
 
