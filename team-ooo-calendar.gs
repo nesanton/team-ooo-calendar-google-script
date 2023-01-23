@@ -81,6 +81,7 @@ function sync() {
   // Determines the time the the script was last run.
   let lastRun = PropertiesService.getScriptProperties().getProperty('lastRun');
   lastRun = lastRun ? new Date(lastRun) : null;
+  // lastRun = null; // use to enforce run in case e.g. setup sync didn't run successfully
 
   // Gets the list of users in the Google Group.
   let users = GroupsApp.getGroupByEmail(GROUP_EMAIL).getUsers();
