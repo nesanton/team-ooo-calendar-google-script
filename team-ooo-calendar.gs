@@ -200,6 +200,10 @@ function findEvents(user, keyword, start, end, optSince) {
  * @return {boolean} True if the event should be imported.
  */
 function shoudImportEvent(user, keyword, event) {
+  // Events of type "outOfOffice" are always imported
+  if (event.eventType == "outOfOffice") {
+      return true;
+  }
   // Filters out events where the keyword did not appear in the summary
   // (that is, the keyword appeared in a different field, and are thus
   // is not likely to be relevant).
