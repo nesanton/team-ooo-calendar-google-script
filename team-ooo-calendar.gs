@@ -98,6 +98,14 @@ function sync() {
     KEYWORDS.forEach(function(keyword) {
       let events = findEvents(user, keyword, today, maxDate, lastRun);
       events.forEach(function(event) {
+
+        // remove outOfOfficeProperties to support importing outOfOffice events
+        // see https://issuetracker.google.com/issues/313935022?pli=1
+        delete(event.outOfOfficeProperties);
+
+        // switch event type to default, cannot create `outOfOffice` events in shared calendars
+        event.eventType = 'default';
+
         importEvent(username, event);
         count++;
       }); // End foreach event.
