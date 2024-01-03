@@ -138,6 +138,11 @@ function importEvent(username, event) {
   };
   event.attendees = [];
   event.transparency = 'transparent';
+  // remove outOfOfficeProperties to support importing outOfOffice events
+  // see https://issuetracker.google.com/issues/313935022?pli=1
+  delete(event.outOfOfficeProperties);
+  // switch event type to default, cannot create `outOfOffice` events in shared calendars
+  event.eventType = 'default';
   console.log('Importing: %s', event.summary);
   try {
     Calendar.Events.import(event, TEAM_CALENDAR_ID);
